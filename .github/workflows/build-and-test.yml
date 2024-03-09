@@ -45,3 +45,6 @@ jobs:
           cmake -DENABLE_TESTING=1 -GXcode -S . -B .xcode-build
           cd .xcode-build
           xcrun xcodebuild -configuration ${{ matrix.configuration }} -scheme DummyTestee -destination 'platform=macOS' test
+
+      - name: Swift Package Manager
+        run: swift test
