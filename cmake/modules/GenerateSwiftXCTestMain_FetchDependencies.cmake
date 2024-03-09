@@ -9,7 +9,7 @@ block()
 
   FetchContent_Declare(SwiftCMakeXCTesting
     GIT_REPOSITORY https://github.com/hylo-lang/SwiftCMakeXCTesting.git
-    GIT_TAG        main
+    GIT_TAG        transition
     OVERRIDE_FIND_PACKAGE
   )
 
@@ -30,9 +30,9 @@ endblock()
 # ArgumentParser relies on XCTest even in its non-test code and it seems not to have the necessary
 # target properties to find it, at least in some contexts.  Hopefully FindSwiftXCTest sets those up
 # in time.
-FetchContent_Populate(SwiftCMakeXCTesting)
-list(PREPEND CMAKE_MODULE_PATH ${swiftcmakexctesting_SOURCE_DIR}/cmake/modules)
-include(FindSwiftXCTest)
+FetchContent_MakeAvailable(SwiftCMakeXCTesting)
+list(PREPEND CMAKE_MODULE_PATH ${swiftcmakexctesting_SOURCE_DIR})
+find_package(SwiftXCTest REQUIRED)
 
 # See https://github.com/apple/swift-syntax/pull/2454, which will hopefully make this clause
 # unnecessary.  Without it CMake will fatal error when loading SwiftSyntax on some platforms.
