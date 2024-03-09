@@ -9,7 +9,7 @@ block()
 
   FetchContent_Declare(SwiftCMakeXCTesting
     GIT_REPOSITORY https://github.com/hylo-lang/SwiftCMakeXCTesting.git
-    GIT_TAG        transition
+    GIT_TAG        main
     OVERRIDE_FIND_PACKAGE
   )
 
