@@ -46,7 +46,7 @@ endif()
 # global variables to be set, and I'm not sure to what extent they may be needed
 if(YES)
   set(saved_BUILD_EXAMPLES ${BUILD_EXAMPLES})
-  set(saved_BUILD_EXAMPLES ${BUILD_EXAMPLES})
+  set(saved_BUILD_TESTING ${BUILD_TESTING})
 
   set(BUILD_EXAMPLES NO)
   set(BUILD_TESTING NO)
@@ -54,7 +54,7 @@ if(YES)
   FetchContent_MakeAvailable(ArgumentParser SwiftSyntax)
 
   set(BUILD_EXAMPLES ${saved_BUILD_EXAMPLES})
-  set(BUILD_EXAMPLES ${saved_BUILD_EXAMPLES})
+  set(BUILD_TESTING ${saved_BUILD_TESTING})
 endif()
 
 # Suppress noisy warnings from dependencies.
