@@ -1,7 +1,7 @@
 find_package(ArgumentParser REQUIRED)
 find_package(SwiftSyntax REQUIRED)
 
-add_executable(GenerateSwiftXCTestMain GenerateXCTestMain.swift)
+add_executable(GenerateSwiftXCTestMain GenerateSwiftXCTestMain.swift)
 
 target_link_libraries(GenerateSwiftXCTestMain
   ArgumentParser

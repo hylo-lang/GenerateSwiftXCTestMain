@@ -25,15 +25,24 @@ let package = Package(
         .product(name: "SwiftParser", package: "swift-syntax"),
         .product(name: "SwiftParserDiagnostics", package: "swift-syntax"),
       ],
-      path: "Sources"
-    ),
+      path: "Sources",
+      exclude: ["CMakeLists.txt"]),
 
-    .target(name: "DummyTestee", path: "Tests", sources: [ "Dummy.swift"] ),
+    .target(name: "DummyTestee",
+            path: "Tests",
+            exclude: ["XCTestImporter.swift", "CMakeLists.txt", "Tests.swift"],
+            sources: [ "Dummy.swift"]),
+
+    .target(name: "XCTestImporter",
+            path: "Tests",
+            exclude: ["Dummy.swift", "CMakeLists.txt", "Tests.swift"],
+            sources: [ "XCTestImporter.swift" ] ),
 
     .testTarget(
       name: "Tests",
-      dependencies: ["GenerateSwiftXCTestMain", "DummyTestee"],
+      dependencies: ["GenerateSwiftXCTestMain", "DummyTestee", "XCTestImporter"],
       path: "Tests",
-      exclude: ["Dummy.swift", "CMakeLists.txt"])
+      exclude: ["XCTestImporter.swift", "CMakeLists.txt", "Dummy.swift"],
+      sources: ["Tests.swift"])
   ]
 )
