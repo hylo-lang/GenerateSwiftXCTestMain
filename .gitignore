@@ -48,6 +48,7 @@ playground.xcworkspace
 .swiftpm
 
 .build/
+/Packages
 
 # CocoaPods
 #
@@ -91,3 +92,4 @@ fastlane/test_output
 iOSInjectionProject/
 
 /.vscode
+/.netrc
