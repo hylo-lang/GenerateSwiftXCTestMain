@@ -42,7 +42,7 @@ jobs:
       - name: Xcode
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
-          cmake -DENABLE_TESTING=1 -GXcode -S . -B .xcode-build
+          cmake -D BUILD_TESTING=1 -G Xcode -S . -B .xcode-build
           cd .xcode-build
           xcrun xcodebuild -configuration ${{ matrix.configuration }} -scheme DummyTestee -destination 'platform=macOS' test
 
