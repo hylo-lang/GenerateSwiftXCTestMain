@@ -30,7 +30,7 @@ There are two methods:
 
    ```sh
    mkdir path/to/build/directory
-   cmake -DENABLE_TESTING=1 -GNinja -S . -B path/to/build/directory
+   cmake -DBUILD_TESTING=1 -GNinja -S . -B path/to/build/directory
    cmake --build path/to/build/directory
    ctest -V --test-dir path/to/build/directory
    ```

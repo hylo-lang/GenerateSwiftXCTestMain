@@ -31,13 +31,13 @@ jobs:
           version: 1.11.1
 
       - name: Native CTest
-        run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_TESTING=1 -GNinja -S . -B .cmake-build && cmake --build .cmake-build && ctest -V --test-dir .cmake-build
+        run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DBUILD_TESTING=1 -GNinja -S . -B .cmake-build && cmake --build .cmake-build && ctest -V --test-dir .cmake-build
 
       - name: Devcontainer CTest
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: devcontainers/ci@v0.3
         with:
-          runCmd: cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_TESTING=1 -GNinja -S . -B .devcontainer-build && cmake --build .devcontainer-build && ctest -V --test-dir .devcontainer-build
+          runCmd: cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DBUILD_TESTING=1 -GNinja -S . -B .devcontainer-build && cmake --build .devcontainer-build && ctest -V --test-dir .devcontainer-build
 
       - name: Xcode
         if: ${{ matrix.os == 'macos-latest' }}
