@@ -34,14 +34,6 @@ FetchContent_MakeAvailable(Hylo-CMakeModules)
 list(PREPEND CMAKE_MODULE_PATH ${hylo-cmakemodules_SOURCE_DIR})
 find_package(SwiftXCTest REQUIRED)
 
-# See https://github.com/apple/swift-syntax/pull/2454, which will hopefully make this clause
-# unnecessary.  Without it CMake will fatal error when loading SwiftSyntax on some platforms.
-if("${SWIFT_HOST_MODULE_TRIPLE}" STREQUAL "")
-  execute_process(COMMAND ${CMAKE_Swift_COMPILER}
-    -print-target-info OUTPUT_VARIABLE target-info)
-  string(JSON SWIFT_HOST_MODULE_TRIPLE GET ${target-info} target moduleTriple)
-endif()
-
 # Not using block() here because FetchContent_MakeAvailable typically causes dependency-specific
 # global variables to be set, and I'm not sure to what extent they may be needed
 if(YES)
