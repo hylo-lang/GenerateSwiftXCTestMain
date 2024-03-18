@@ -7,8 +7,8 @@ block()
 
   set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE NEVER)
 
-  FetchContent_Declare(SwiftCMakeXCTesting
-    GIT_REPOSITORY https://github.com/hylo-lang/SwiftCMakeXCTesting.git
+  FetchContent_Declare(Hylo-CMakeModules
+    GIT_REPOSITORY https://github.com/hylo-lang/CMakeModules.git
     GIT_TAG        main
     OVERRIDE_FIND_PACKAGE
   )
@@ -30,8 +30,8 @@ endblock()
 # ArgumentParser relies on XCTest even in its non-test code and it seems not to have the necessary
 # target properties to find it, at least in some contexts.  Hopefully FindSwiftXCTest sets those up
 # in time.
-FetchContent_MakeAvailable(SwiftCMakeXCTesting)
-list(PREPEND CMAKE_MODULE_PATH ${swiftcmakexctesting_SOURCE_DIR})
+FetchContent_MakeAvailable(Hylo-CMakeModules)
+list(PREPEND CMAKE_MODULE_PATH ${hylo-cmakemodules_SOURCE_DIR})
 find_package(SwiftXCTest REQUIRED)
 
 # See https://github.com/apple/swift-syntax/pull/2454, which will hopefully make this clause
