@@ -26,7 +26,12 @@ let package = Package(
         .product(name: "SwiftParserDiagnostics", package: "swift-syntax"),
       ],
       path: "Sources",
-      exclude: ["CMakeLists.txt"]),
+      exclude: ["CMakeLists.txt"],
+      // This setting is needed on Windows until SPM >5.9.0 is
+      // released due to
+      // https://github.com/apple/swift-package-manager/issues/7410
+      swiftSettings: [.unsafeFlags(["-parse-as-library"])]
+    ),
 
     .target(name: "DummyTestee",
             path: "Tests",
