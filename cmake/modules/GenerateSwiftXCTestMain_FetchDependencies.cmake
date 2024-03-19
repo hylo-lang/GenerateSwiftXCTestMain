@@ -15,7 +15,7 @@ block()
 
   FetchContent_Declare(SwiftSyntax
     GIT_REPOSITORY https://github.com/apple/swift-syntax.git
-    GIT_TAG        main
+    GIT_TAG        b32df0ee1af3989b466286f59fce285f8ec57d6f
     OVERRIDE_FIND_PACKAGE
   )
 
