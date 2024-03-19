@@ -28,11 +28,14 @@ struct StructsAreNotTestCases {
     XCTFail("This shouldn't run")
   }
 
+  // Work around https://github.com/apple/swift-package-manager/issues/7411
+  #if !os(Windows) && !os(Linux) || !BUILDING_WITH_SWIFT_PACKAGE_MANAGER
   class NestedStructClassesCanBeTestCases: XCTestCase {
 
     func testNestedClassMethodsCanBeTests() {}
 
   }
+  #endif
 
 }
 
@@ -42,11 +45,14 @@ enum EnumsAreNotTestCases {
     XCTFail("This shouldn't run")
   }
 
+  // Work around https://github.com/apple/swift-package-manager/issues/7411
+  #if !os(Windows) && !os(Linux) || !BUILDING_WITH_SWIFT_PACKAGE_MANAGER
   class NestedEnumClassesCanBeTestCases: XCTestCase {
 
     func testNestedClassMethodsCanBeTests() {}
 
   }
+  #endif
 
 }
 

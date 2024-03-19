@@ -62,4 +62,4 @@ jobs:
           xcrun xcodebuild -configuration ${{ matrix.configuration }} -scheme DummyTestee -destination 'platform=macOS' test
 
       - name: Swift Package Manager
-        run: swift test
+        run: swift test -Xswiftc -DBUILDING_WITH_SWIFT_PACKAGE_MANAGER
