@@ -45,7 +45,7 @@ let package = Package(
 
     .testTarget(
       name: "Tests",
-      dependencies: ["GenerateSwiftXCTestMain", "DummyTestee", "XCTestImporter"],
+      dependencies: ["DummyTestee", "XCTestImporter"],
       path: "Tests",
       exclude: ["XCTestImporter.swift", "CMakeLists.txt", "Dummy.swift"],
       sources: ["Tests.swift"])
