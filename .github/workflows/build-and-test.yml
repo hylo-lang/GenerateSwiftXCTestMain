@@ -5,6 +5,9 @@ name: Build and test
   push:
     branches: ["**"]
 
+env:
+  swift-version: '5.9'
+
 jobs:
   build-and-test:
     strategy:
