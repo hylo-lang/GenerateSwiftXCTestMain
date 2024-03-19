@@ -21,21 +21,10 @@ let package = Package(
       ],
       path: "Sources"),
 
-    .target(name: "DummyTestee",
-            path: "Tests",
-            exclude: ["XCTestImporter.swift", "Tests.swift"],
-            sources: [ "Dummy.swift"]),
-
-    .target(name: "XCTestImporter",
-            path: "Tests",
-            exclude: ["Dummy.swift", "Tests.swift"],
-            sources: [ "XCTestImporter.swift" ] ),
-
     .testTarget(
       name: "Tests",
-      dependencies: ["GenerateSwiftXCTestMain", "DummyTestee", "XCTestImporter"],
+      dependencies: ["GenerateSwiftXCTestMain"],
       path: "Tests",
-      exclude: ["XCTestImporter.swift", "Dummy.swift"],
       sources: ["Tests.swift"])
   ]
 )
