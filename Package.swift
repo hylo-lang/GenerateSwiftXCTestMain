@@ -10,7 +10,6 @@ let package = Package(
 
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
-    .package(url: "https://github.com/apple/swift-syntax.git", branch: "main"),
   ],
   targets: [
     // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -19,30 +18,24 @@ let package = Package(
       name: "GenerateSwiftXCTestMain",
       dependencies: [
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
-        .product(name: "SwiftSyntax", package: "swift-syntax"),
-        .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
-        .product(name: "SwiftOperators", package: "swift-syntax"),
-        .product(name: "SwiftParser", package: "swift-syntax"),
-        .product(name: "SwiftParserDiagnostics", package: "swift-syntax"),
       ],
-      path: "Sources",
-      exclude: ["CMakeLists.txt"]),
+      path: "Sources"),
 
     .target(name: "DummyTestee",
             path: "Tests",
-            exclude: ["XCTestImporter.swift", "CMakeLists.txt", "Tests.swift"],
+            exclude: ["XCTestImporter.swift", "Tests.swift"],
             sources: [ "Dummy.swift"]),
 
     .target(name: "XCTestImporter",
             path: "Tests",
-            exclude: ["Dummy.swift", "CMakeLists.txt", "Tests.swift"],
+            exclude: ["Dummy.swift", "Tests.swift"],
             sources: [ "XCTestImporter.swift" ] ),
 
     .testTarget(
       name: "Tests",
       dependencies: ["GenerateSwiftXCTestMain", "DummyTestee", "XCTestImporter"],
       path: "Tests",
-      exclude: ["XCTestImporter.swift", "CMakeLists.txt", "Dummy.swift"],
+      exclude: ["XCTestImporter.swift", "Dummy.swift"],
       sources: ["Tests.swift"])
   ]
 )

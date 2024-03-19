@@ -1,10 +1,5 @@
 import ArgumentParser
 import Foundation
-import SwiftDiagnostics
-import SwiftOperators
-import SwiftParser
-import SwiftParserDiagnostics
-import SwiftSyntax
 
 /// Mapping from (presumed) XCTest type names to a list of test method
 /// names.
@@ -45,10 +40,7 @@ struct GenerateSwiftXCTestMain: ParsableCommand {
   ///
   /// - See also: `discoveredTests()` for more information.
   func discoveredTests(in f: URL) throws -> TestCatalog {
-    let tree = try parseAndEmitDiagnostics(source: String(contentsOf: f))
-    let scraper = TestScraper()
-    scraper.walk(tree)
-    return scraper.result
+    return [:]
   }
 
   /// Returns the text of an extension to the type named `testCaseName` that adds a static
@@ -140,99 +132,4 @@ struct GenerateSwiftXCTestMain: ParsableCommand {
     try output.write(to: main, atomically: true, encoding: .utf8)
   }
 
-}
-
-struct ParseFailure: Error {
-  let diagnostics: [Diagnostic]
-}
-
-/// Parses the given source code and returns a valid `SourceFileSyntax` node.
-///
-/// This helper function automatically folds sequence expressions using the given operator table,
-/// ignoring errors so that formatting can do something reasonable in the presence of unrecognized
-/// operators.
-///
-/// - Throws: If an unrecoverable error occurs when formatting the code.
-func parseAndEmitDiagnostics(
-  source: String,
-  operatorTable: OperatorTable = .standardOperators
-) throws -> SourceFileSyntax {
-  let sourceFile =
-    operatorTable.foldAll(Parser.parse(source: source)) { _ in }.as(SourceFileSyntax.self)!
-
-  let diagnostics = ParseDiagnosticsGenerator.diagnostics(for: sourceFile)
-  if !diagnostics.isEmpty {
-    throw ParseFailure(diagnostics: diagnostics)
-  }
-
-  return sourceFile
-}
-
-class TestScraper: SyntaxVisitor {
-
-  init() { super.init(viewMode: .all) }
-
-  var scope: [(name: String, possibleClass: Bool)] = []
-  var result: TestCatalog = [:]
-
-  private func enterScope(name: String, possibleClass: Bool, modifiers: DeclModifierListSyntax) -> SyntaxVisitorContinueKind {
-    scope.append((name, possibleClass))
-    return modifiers.contains(where: { $0.name.text == "private" }) ? .skipChildren
-      : .visitChildren
-  }
-
-  private func leaveScope() { scope.removeLast() }
-
-  override func visit(_ n: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-    enterScope(name: n.name.text, possibleClass: true, modifiers: n.modifiers)
-  }
-
-  override func visitPost(_: ClassDeclSyntax) {
-    leaveScope()
-  }
-
-  override func visit(_ n: StructDeclSyntax) -> SyntaxVisitorContinueKind {
-    enterScope(name: n.name.text, possibleClass: false, modifiers: n.modifiers)
-  }
-
-  override func visitPost(_: StructDeclSyntax) {
-    leaveScope()
-  }
-
-  override func visit(_ n: EnumDeclSyntax) -> SyntaxVisitorContinueKind {
-    enterScope(name: n.name.text, possibleClass: false, modifiers: n.modifiers)
-  }
-
-  override func visitPost(_: EnumDeclSyntax) {
-    scope.removeLast()
-  }
-
-  override func visit(_ n: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
-    enterScope(
-      name: n.extendedType.trimmedDescription, possibleClass: true, modifiers: n.modifiers)
-  }
-
-  override func visitPost(_: ExtensionDeclSyntax) {
-    scope.removeLast()
-  }
-
-  override func visit(_ n: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
-    // Bail if we can't possibly be in a class, or if the method is static or private.
-    if scope.isEmpty || !scope.last!.possibleClass
-         || n.modifiers.contains(where: { ["static", "private"].contains($0.name.text) })
-    {
-      return .skipChildren
-    }
-
-    let baseName = n.name.text
-    if baseName.starts(with: "test")
-         && n.signature.parameterClause.parameters.isEmpty
-         && n.genericParameterClause == nil
-         && n.genericWhereClause == nil
-    {
-      result[scope.lazy.map(\.name).joined(separator: "."), default: []].append(baseName)
-    }
-
-    return .skipChildren
-  }
 }
