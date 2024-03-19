@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-13, ubuntu-latest, windows-latest]
         configuration: [Debug, Release]
 
     runs-on: ${{ matrix.os }}
@@ -20,11 +20,23 @@ jobs:
         with:
           show-progress: false
 
-      - name: Setup Swift
-        if: ${{ matrix.os != 'macos-latest' }}
-        uses: SwiftyLab/setup-swift@latest
+      - name: 'Set up swift (*nix)'
+        if: ${{ matrix.os != 'windows-latest' }}
+        uses: swift-actions/setup-swift@v1
         with:
-          swift-version: 5.9
+          swift-version: ${{ env.swift-version }}
+
+      - uses: compnerd/gha-setup-vsdevenv@main
+
+      - name: Set up swift (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        uses: compnerd/gha-setup-swift@v0.2.1
+        with:
+          branch: swift-${{ env.swift-version }}-release
+          tag: ${{ env.swift-version }}-RELEASE
+
+      - name: Verify swift version
+        run: ${{ matrix.os == 'macos-13' && 'xcrun' || '' }} swift --version
 
       - uses: seanmiddleditch/gha-setup-ninja@v4
         with:
@@ -40,7 +52,7 @@ jobs:
           runCmd: cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DBUILD_TESTING=1 -GNinja -S . -B .devcontainer-build && cmake --build .devcontainer-build && ctest -V --test-dir .devcontainer-build
 
       - name: Xcode
-        if: ${{ matrix.os == 'macos-latest' }}
+        if: ${{ matrix.os == 'macos-13' }}
         run: |
           cmake -D BUILD_TESTING=1 -G Xcode -S . -B .xcode-build
           cd .xcode-build
