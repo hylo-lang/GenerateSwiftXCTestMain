@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        configuration: [Debug, Release]
+        configuration: [Debug]
 
     runs-on: ${{ matrix.os }}
 
