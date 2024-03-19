@@ -19,6 +19,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - run: git config --global core.eol lf
+
       - uses: actions/checkout@v4
         with:
           show-progress: false
