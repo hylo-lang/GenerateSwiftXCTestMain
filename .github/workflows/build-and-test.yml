@@ -23,23 +23,14 @@ jobs:
         with:
           show-progress: false
 
-      - name: 'Set up swift (*nix)'
-        if: ${{ matrix.os != 'windows-latest' }}
-        uses: swift-actions/setup-swift@v1
+      - name: 'Set up swift'
+        uses: SwiftyLab/setup-swift@latest
         with:
           swift-version: ${{ env.swift-version }}
 
-      - uses: compnerd/gha-setup-vsdevenv@main
-
-      - name: Set up swift (Windows)
-        if: ${{ matrix.os == 'windows-latest' }}
-        uses: compnerd/gha-setup-swift@v0.2.1
-        with:
-          branch: swift-${{ env.swift-version }}-release
-          tag: ${{ env.swift-version }}-RELEASE
-
       - name: Verify swift version
-        run: ${{ matrix.os == 'macos-13' && 'xcrun' || '' }} swift --version
+        run: swift --version && swift --version | grep -q ${{ env.swift-version }}
+        shell: bash
 
       - uses: seanmiddleditch/gha-setup-ninja@v4
         with:
