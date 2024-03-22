@@ -1,4 +1,4 @@
-find_package(ArgumentParser REQUIRED)
+find_package(SwiftArgumentParser REQUIRED)
 find_package(SwiftSyntax REQUIRED)
 
 add_executable(GenerateSwiftXCTestMain GenerateSwiftXCTestMain.swift)
