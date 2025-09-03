@@ -45,7 +45,7 @@ struct GenerateSwiftXCTestMain: ParsableCommand {
   ///
   /// - See also: `discoveredTests()` for more information.
   func discoveredTests(in f: URL) throws -> TestCatalog {
-    let tree = try parseAndEmitDiagnostics(source: String(contentsOf: f))
+    let tree = try parseAndEmitDiagnostics(source: String(contentsOf: f, encoding: .utf8))
     let scraper = TestScraper()
     scraper.walk(tree)
     return scraper.result
@@ -73,14 +73,17 @@ struct GenerateSwiftXCTestMain: ParsableCommand {
 
     let output =
       """
-      import XCTest
       #if canImport(Darwin)
-        import Darwin
+        @preconcurrency import Darwin
       #elseif canImport(Glibc)
-        import Glibc
+        @preconcurrency import Glibc // disable concurrency safety checks for stdout/stderr flushing
       #elseif canImport(CRT)
-        import CRT
+        @preconcurrency import CRT
       #endif
+
+      // Must be after the Glibc import, because the first occurency of a (transitive) import determines whether
+      // something is a @preconcurrency import.
+      import XCTest
 
       // Type names not exported by the proprietary version of XCTest .
       #if os(macOS) && !canImport(SwiftXCTest)
@@ -114,13 +117,12 @@ struct GenerateSwiftXCTestMain: ParsableCommand {
 
       \(tests.map(allTestsExtension).joined(separator: "\n\n"))
 
-      /// The full complement of test cases and their individual tests
-      private let allTestCases: [XCTestCaseEntry] = [
-        \(tests.keys.map {"\($0).allTests.eraseTestTypes()"}.joined(separator: ",\n  "))
-      ]
-
       /// Feeds `allTestCases` to `XCTMain` if the latter is available.
       func runAllTestCases() {
+        /// The full complement of test cases and their individual tests
+        let allTestCases: [XCTestCaseEntry] = [
+          \(tests.keys.map {"\($0).allTests.eraseTestTypes()"}.joined(separator: ",\n  "))
+        ]
         #if !os(Windows)
           // ignore SIGPIPE which is sent when writing to closed file descriptors.
           _ = signal(SIGPIPE, SIG_IGN)

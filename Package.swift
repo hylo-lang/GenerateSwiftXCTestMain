@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.1
 
 import PackageDescription
 
@@ -48,6 +48,13 @@ let package = Package(
       dependencies: ["DummyTestee", "XCTestImporter"],
       path: "Tests",
       exclude: ["XCTestImporter.swift", "CMakeLists.txt", "Dummy.swift"],
-      sources: ["Tests.swift"])
-  ]
+      sources: ["Tests.swift"]),
+    // Use this for testing the generated file. 
+    // Generate the main.swift by running this: `swift run -Xswiftc -DBUILDING_WITH_SWIFT_PACKAGE_MANAGER GenerateSwiftXCTestMain -o GeneratedTestingTarget/main.swift /home/ambrus/GenerateSwiftXCTestMain/Tests/Tests.swift`
+    // Then copy Tests.swift into this directory and try to build the target. `swift run GeneratedTestingTarget`
+    .executableTarget(
+      name: "GeneratedTestingTarget",
+      dependencies: ["Tests"],
+      path: "GeneratedTestingTarget")
+  ],
 )
