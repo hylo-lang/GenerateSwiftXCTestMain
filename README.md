@@ -25,7 +25,7 @@ the scope of test method bodies could produce unpredictable results.
 
 There are two methods:
 
-1. **Swift Package Manager**: `swift test`
+1. **Swift Package Manager**: `swift test -Xswiftc -DBUILDING_WITH_SWIFT_PACKAGE_MANAGER`
 2. **CMake**: `
 
    ```sh
