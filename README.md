@@ -26,7 +26,7 @@ the scope of test method bodies could produce unpredictable results.
 There are two methods:
 
 1. **Swift Package Manager**: `swift test`
-2. **CMake**: `
+2. **CMake**:
 
    ```sh
    mkdir path/to/build/directory
